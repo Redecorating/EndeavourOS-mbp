@@ -87,25 +87,19 @@ chown root:root -R /etc/skel
 chmod 644 /usr/share/endeavouros/*.png
 rm -rf /usr/share/backgrounds/xfce/xfce-verticals.png
 ln -s /usr/share/endeavouros/backgrounds/endeavouros-wallpaper.png /usr/share/backgrounds/xfce/xfce-verticals.png
-chsh -s /bin/bash"
-}
+chsh -s /bin/bash
 
-#################################
-########## STARTS HERE ##########
-#################################
-
-do_merge
-
-# apple-t2 stuff, shamelessly copied from redecorating/archinstall-mbp by redecorating.
-arch_chroot "
+echo APPLET2
+sleep 3
 nobody(){
-	sh -c 'HOME=/usr/local/src/t2linux runuser nobody -m -s /bin/sh -c \'${1}\''
+    sh -c \"HOME=/usr/local/src/t2linux runuser nobody -m -s /bin/sh -c '\${1}'\"
 }
 
 curl -o key.asc https://dl.t2linux.org/archlinux/key.asc
 pacman-key --add key.asc
 pacman-key --lsign 7F9B8FC29F78B339
 rm key.asc
+echo apple-bce > /etc/modules-load.d/apple-bce.conf
 
 sed -i s/^MODULES=\(/MODULES=\(apple_bce\ hid_apple\ usbhid\ /gm /etc/mkinitcpio.conf
 
@@ -122,10 +116,16 @@ pacman -U --noconfirm /usr/local/src/t2linux/apple-t2-audio-config/apple-t2-audi
 echo [device] >> /etc/NetworkManager/NetworkManager.conf
 echo wifi.backend=iwd >> /etc/NetworkManager/NetworkManager.conf
 
-echo Skipping wifi :(
+echo Skipping wifi
 
-# old iwd?
+# old iwd
 
-echo efivarfs /sys/firmware/efi/efivars efivarfs ro,remount 0 0 >> /etc/fstab
+echo efivarfs /sys/firmware/efi/efivars efivarfs ro,remount 0 0 >> /etc/fstab"
+}
 
-"
+#################################
+########## STARTS HERE ##########
+#################################
+
+do_merge
+

@@ -5,7 +5,7 @@
 
 PRESETS=('archiso')
 
-ALL_kver='/boot/vmlinuz-linux'
+ALL_kver='/boot/vmlinuz-linux-mbp'
 ALL_config='/etc/mkinitcpio.conf'
 
 archiso_image="/boot/archiso.img"

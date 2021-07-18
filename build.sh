@@ -160,7 +160,7 @@ make_customize_airootfs() {
 make_boot() {
     mkdir -p "${work_dir}/iso/${install_dir}/boot/x86_64"
     cp "${work_dir}/x86_64/airootfs/boot/archiso.img" "${work_dir}/iso/${install_dir}/boot/x86_64/"
-    cp "${work_dir}/x86_64/airootfs/boot/vmlinuz-linux" "${work_dir}/iso/${install_dir}/boot/x86_64/"
+    cp "${work_dir}/x86_64/airootfs/boot/vmlinuz-linux-mbp" "${work_dir}/iso/${install_dir}/boot/x86_64/"
 }
 
 # Add other aditional/extra files to ${install_dir}/boot/
@@ -188,7 +188,7 @@ make_boot_extra() {
 
 # Prepare /${install_dir}/boot/syslinux
 make_syslinux() {
-    _uname_r=$(file -b "${work_dir}/x86_64/airootfs/boot/vmlinuz-linux"| awk 'f{print;f=0} /version/{f=1}' RS=' ')
+    _uname_r=$(file -b "${work_dir}/x86_64/airootfs/boot/vmlinuz-linux-mbp"| awk 'f{print;f=0} /version/{f=1}' RS=' ')
     mkdir -p "${work_dir}/iso/${install_dir}/boot/syslinux"
     for _cfg in "${script_path}/syslinux/"*.cfg; do
         sed "s|%ARCHISO_LABEL%|${iso_label}|g;
@@ -250,7 +250,7 @@ make_efiboot() {
     mount "${work_dir}/iso/EFI/archiso/efiboot.img" "${work_dir}/efiboot"
 
     mkdir -p "${work_dir}/efiboot/EFI/archiso"
-    cp "${work_dir}/iso/${install_dir}/boot/x86_64/vmlinuz-linux" "${work_dir}/efiboot/EFI/archiso/"
+    cp "${work_dir}/iso/${install_dir}/boot/x86_64/vmlinuz-linux-mbp" "${work_dir}/efiboot/EFI/archiso/"
     cp "${work_dir}/iso/${install_dir}/boot/x86_64/archiso.img" "${work_dir}/efiboot/EFI/archiso/"
 
     cp "${work_dir}/iso/${install_dir}/boot/intel-ucode.img" "${work_dir}/efiboot/EFI/archiso/"
