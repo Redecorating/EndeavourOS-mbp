@@ -63,7 +63,7 @@ pacman-key --add /usr/share/pacman/keyrings/endeavouros.gpg && sudo pacman-key -
 pacman-key --populate
 pacman-key --refresh-keys
 pacman -Syy
-sed -i 's|^GRUB_CMDLINE_LINUX_DEFAULT=\"\(.*\)\"$|GRUB_CMDLINE_LINUX_DEFAULT=\"\1 nowatchdog\"|' /etc/default/grub
+sed -i 's|^GRUB_CMDLINE_LINUX_DEFAULT=\"\(.*\)\"$|GRUB_CMDLINE_LINUX_DEFAULT=\"\1 nowatchdog pcie_ports=compat intel_iommu=on\"|' /etc/default/grub
 sed -i 's?GRUB_DISTRIBUTOR=.*?GRUB_DISTRIBUTOR=\"EndeavourOS\"?' /etc/default/grub
 sed -i 's?\#GRUB_THEME=.*?GRUB_THEME=\/boot\/grub\/themes\/EndeavourOS\/theme.txt?g' /etc/default/grub
 echo 'GRUB_DISABLE_SUBMENU=y' >> /etc/default/grub
@@ -95,3 +95,37 @@ chsh -s /bin/bash"
 #################################
 
 do_merge
+
+# apple-t2 stuff, shamelessly copied from redecorating/archinstall-mbp by redecorating.
+arch_chroot "
+nobody(){
+	sh -c 'HOME=/usr/local/src/t2linux runuser nobody -m -s /bin/sh -c \'${1}\''
+}
+
+curl -o key.asc https://dl.t2linux.org/archlinux/key.asc
+pacman-key --add key.asc
+pacman-key --lsign 7F9B8FC29F78B339
+rm key.asc
+
+sed -i s/^MODULES=\(/MODULES=\(apple_bce\ hid_apple\ usbhid\ /gm /etc/mkinitcpio.conf
+
+mkdir /usr/local/src/t2linux
+chown nobody:nobody /usr/local/src/t2linux
+nobody 'git clone https://github.com/Redecorating/archinstall-mbp -b packages /usr/local/src/t2linux'
+
+nobody 'cd /usr/local/src/t2linux/apple-ibridge-dkms-git && makepkg'
+pacman -U --noconfirm /usr/local/src/t2linux/apple-ibridge-dkms-git/apple-ibridge-dkms-git-*-x86_64.pkg*
+
+nobody 'cd /usr/local/src/t2linux/apple-t2-audio-config && makepkg'
+pacman -U --noconfirm /usr/local/src/t2linux/apple-t2-audio-config/apple-t2-audio-config-?.?-?-any.pkg*
+
+echo [device] >> /etc/NetworkManager/NetworkManager.conf
+echo wifi.backend=iwd >> /etc/NetworkManager/NetworkManager.conf
+
+echo Skipping wifi :(
+
+# old iwd?
+
+echo efivarfs /sys/firmware/efi/efivars efivarfs ro,remount 0 0 >> /etc/fstab
+
+"

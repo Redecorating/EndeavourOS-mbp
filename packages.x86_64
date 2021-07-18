@@ -28,8 +28,8 @@ base-devel
 # linux (base-group)
 # not anymore in base-group, needs explicit install
 # adding old base packages here as a list
-linux
-linux-headers
+#linux
+#linux-headers
 linux-firmware
 mkinitcpio
 mkinitcpio-busybox
@@ -85,9 +85,9 @@ xf86-video-ati
 xf86-video-fbdev
 xf86-video-intel
 #xf86-video-nouveau
-nvidia-installer-dkms
-nvidia-dkms
-nvidia-utils
+#nvidia-installer-dkms
+#nvidia-dkms
+#nvidia-utils
 #removed as it is not needed to run nvidia driver
 #nvidia-settings
 
@@ -217,8 +217,8 @@ gnome-keyring
 
 # network.packages
 #b43-firmware
-b43-fwcutter
-broadcom-wl-dkms
+#b43-fwcutter
+#broadcom-wl-dkms
 dnsutils
 ipw2100-fw
 ipw2200-fw
@@ -379,3 +379,8 @@ eos-log-tool
 # endeavouros.mirrors_servers
 keyserver-rank
 reflector-simple
+
+# linux-mbp
+apple-bce-dkms-git
+linux-mbp
+linux-mbp-headers
